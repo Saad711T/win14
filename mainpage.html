@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Win12浏览器</title> <!-- 优化：修改页面标题为描述性标题 -->
+    <title>Win14</title>
     <style>
         * {
             margin: 0px;
@@ -58,9 +58,9 @@
         }
 
         body>div.logo {
-            width: 100%;
-            height: 60px;
-            background-image: url('./img/Bing.svg');
+            width: 400%;
+            height: 400px;
+            background-image: url('./img/logo.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: 50% 50%;
@@ -76,50 +76,50 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#5F6368">
             <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
         </svg>
-        <input type="text" onkeyup="handleKeyPress(event)" placeholder="在必应中搜索，或输入一个网址">
+        <input type="text" onkeyup="handleKeyPress(event)" placeholder="Search (Bing)">
     </div>
     <script>
         function handleKeyPress(event) {
-            // 如果按下的是回车键
+
             if (event.keyCode === 13) {
-                // 获取输入框的值
+
                 var inputValue = event.target.value;
-                // 判断是否为搜索查询
+
                 if (isSearchQuery(inputValue)) {
-                    // 在Bing中搜索
+
                     searchInBing(inputValue);
                 } else {
-                    // 导航到指定URL
+
                     navigateToURL(inputValue);
                 }
             }
         }
     
         function isSearchQuery(value) {
-            // 正则用来验证大部分常见的URL格式，包括以"http://"、"https://"或"ftp://"开头的URL
+
             var urlPattern = /^(((ht|f)tps?):\/\/)?([^!@#$%^&*?.\s-]([^!@#$%^&*?.\s]{0,63}[^!@#$%^&*?.\s])?\.)+[a-z]{2,6}\/?/;
-            // 判断是否为URL
+
             return !urlPattern.test(value);
         }
     
         function searchInBing(query) {
-            // 对查询进行编码
+
             var encodedQuery = encodeURIComponent(query);
-            // 在新标签页中打开Bing搜索
+
             window.location = 'https://bing.com/search?q=' + encodedQuery;
-            // 可能报错
+
             apps.edge.rename(query);
         }
     
         function navigateToURL(url) {
-            // 如果URL不包含协议前缀
+
             if (!/^https?:\/\//.test(url)) {
-                // 添加默认的HTTP协议前缀
+
                 url = 'http://' + url;
             }
-            // 导航到指定URL
+
             window.location = url;
-            // 可能报错
+
             apps.edge.rename(url); 
         }
     </script>
