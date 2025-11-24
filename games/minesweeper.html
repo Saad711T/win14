@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>win12扫雷</title>
+    <title>Windows Minesweeper</title>
     <style>
         body {
             font-family: sans-serif;
@@ -94,7 +94,7 @@
             color: white;
         }
 
-        .cell.flagged::before { /* 这里写完才知道忘加了 */
+        .cell.flagged::before {
             content: "🚩";
             position: absolute;
             top: 50%;
@@ -102,7 +102,6 @@
             transform: translate(-50%, -50%);
             font-size: 1.2em;
         }
-
 
         .win12-button {
             background-color: #c0c0c0;
@@ -149,8 +148,6 @@
         .close:hover,
         .close:focus {
             color: black;
-            text-decoration: none;
-            cursor: pointer;
         }
 
         .difficulty-selector {
@@ -163,16 +160,6 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
-        }
-
-        .custom-difficulty label {
-            font-size: 14px;
-        }
-
-        .custom-difficulty input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
         }
     </style>
 </head>
@@ -190,25 +177,25 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close" id="close-modal">&times;</span>
-            <h2>游戏结束！</h2>
+            <h2>Game Over!</h2>
             <p id="modal-message"></p>
-            <button class="win12-button" id="restart-button">重新开始</button>
+            <button class="win12-button" id="restart-button">Restart</button>
         </div>
     </div>
 
-    <!-- 模式-->
+    <!-- Difficulty -->
     <div class="difficulty-selector">
-        <button class="win12-button" data-difficulty="easy">简单 (9x9, 10雷)</button>
-        <button class="win12-button" data-difficulty="medium">中等 (16x16, 40雷)</button>
-        <button class="win12-button" data-difficulty="hard">困难 (16x30, 99雷)</button>
+        <button class="win12-button" data-difficulty="easy">Easy (9x9, 10 mines)</button>
+        <button class="win12-button" data-difficulty="medium">Medium (16x16, 40 mines)</button>
+        <button class="win12-button" data-difficulty="hard">Hard (16x30, 99 mines)</button>
         <div class="custom-difficulty">
-            <label for="custom-rows">行数:</label>
+            <label for="custom-rows">Rows:</label>
             <input type="number" id="custom-rows" value="16" min="5" max="30">
-            <label for="custom-cols">列数:</label>
+            <label for="custom-cols">Columns:</label>
             <input type="number" id="custom-cols" value="16" min="5" max="30">
-            <label for="custom-mines">雷数:</label>
+            <label for="custom-mines">Mines:</label>
             <input type="number" id="custom-mines" value="40" min="1" max="899">
-            <button class="win12-button" id="custom-button">自定义</button>
+            <button class="win12-button" id="custom-button">Custom</button>
         </div>
     </div>
 
@@ -228,8 +215,6 @@
     const customRowsInput = document.getElementById('custom-rows');
     const customColsInput = document.getElementById('custom-cols');
     const customMinesInput = document.getElementById('custom-mines');
-    //好丑啊这里
-
 
     let grid = [];
     let rows = 9;
@@ -241,14 +226,12 @@
     let seconds = 0;
     let firstClick = true;
 
-
     function createGrid() {
         grid = [];
         for (let i = 0; i < rows; i++) {
             grid.push(Array(cols).fill(0));
         }
     }
-
 
     function placeMines(initialRow, initialCol) {
         let minesPlaced = 0;
@@ -262,8 +245,6 @@
             }
         }
     }
-
-
 
     function calculateNumbers() {
         for (let i = 0; i < rows; i++) {
@@ -282,7 +263,6 @@
             }
         }
     }
-
 
     function renderGrid() {
         gridElement.innerHTML = '';
@@ -303,7 +283,6 @@
         }
     }
 
-
     function handleCellClick(event) {
         if (isGameOver) return;
 
@@ -318,14 +297,13 @@
             startTimer();
         }
 
-
-        if (cell.classList.contains('flagged')) return; // Ignore clicks on flagged cells
+        if (cell.classList.contains('flagged')) return;
 
         revealCell(row, col);
     }
 
     function handleCellRightClick(event) {
-        event.preventDefault(); // Prevent default context menu
+        event.preventDefault();
         if (isGameOver) return;
 
         const cell = event.target;
@@ -346,18 +324,15 @@
                 cell.classList.add('flagged');
                 minesLeft--;
             }
-
         }
         minesLeftElement.textContent = minesLeft;
     }
-
 
     function revealCell(row, col) {
         if (row < 0 || row >= rows || col < 0 || col >= cols || grid[row][col] === 'revealed') return;
 
         const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
         if (!cell || cell.classList.contains('flagged')) return;
-
 
         if (grid[row][col] === 'mine') {
             cell.classList.add('mine', 'revealed');
@@ -369,7 +344,6 @@
         grid[row][col] = 'revealed';
         cell.classList.add('revealed');
         cell.textContent = value === 0 ? '' : value;
-
 
         if (value === 0) {
             for (let x = -1; x <= 1; x++) {
@@ -387,7 +361,6 @@
         stopTimer();
         resetButton.textContent = win ? "😎" : "🤯";
 
-        // Reveal all mines
         for (let i = 0; i < rows; i++) {
             for (let j = 0; j < cols; j++) {
                 const cell = document.querySelector(`[data-row="${i}"][data-col="${j}"]`);
@@ -397,10 +370,9 @@
             }
         }
 
-        modalMessage.textContent = win ? "恭喜，你赢了！" : "游戏结束，你输了！";
+        modalMessage.textContent = win ? "Congratulations! You win!" : "You hit a mine!";
         modal.style.display = "flex";
     }
-
 
     function checkWin() {
         let revealedCount = 0;
@@ -415,7 +387,6 @@
             gameOver(true);
         }
     }
-
 
     function resetGame() {
         isGameOver = false;
@@ -441,8 +412,6 @@
         clearInterval(timerInterval);
     }
 
-
-    // Event listeners
     resetButton.addEventListener('click', resetGame);
 
     closeModalButton.addEventListener('click', () => {
@@ -485,13 +454,11 @@
             mines = customMines;
             resetGame();
         } else {
-            alert("自定义参数不合法，请重新设置。");
+            alert("Invalid custom settings. Please try again.");
         }
     });
 
-
-    // Initialize game
-    resetGame(); // Start with default settings
+    resetGame();
 </script>
 
 </body>
